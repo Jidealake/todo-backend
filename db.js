@@ -1,26 +1,14 @@
-const express = require('express');
-const cors = require('cors');
+const { Pool } = require('pg');
 
-const app = express();
-const PORT = 3001;
-
-app.use(cors());
-app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Backend is running on port 3001');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // required for Render PostgreSQL
+  },
 });
 
-app.post('/api/data', (req, res) => {
-  const data = req.body;
-  console.log('Received:', data);
-  res.json({ message: 'Data received successfully', receivedData: data });
-});
+pool.connect()
+  .then(() => console.log('✅ Connected to PostgreSQL'))
+  .catch(err => console.error('❌ PostgreSQL connection error:', err.message));
 
-// This is the line that starts the server — VERY important
-app.listen(PORT, () => {
-  console.log(`✅ Server is running at http://localhost:${PORT}`);
-});
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
+module.exports = pool;
