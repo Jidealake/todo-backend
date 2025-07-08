@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-/app.get('/todos', async (req, res) => {
+app.get('/todos', async (req, res) => {
   console.log("🟢 /todos route was called");
   try {
     const result = await pool.query('SELECT * FROM todos');
